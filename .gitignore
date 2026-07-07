@@ -1,0 +1,65 @@
+data/
+models/
+.env
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+reports/figures/
+
+#----------
+# Inisialisasi git
+git init
+
+# Pastikan .gitignore sudah dibuat di Langkah 1, lalu tambahkan semua file
+git add .
+
+# Buat commit pertama
+git commit -m "Initial commit: Setup project structure and dependencies for Historiografi Digital Nusantara"
+# ------------------------
+# Virtual Environment
+myenv/
+venv/
+env/
+
+# Data besar (jangan di-upload ke GitHub)
+data/
+01_Dokumen_Sumber/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Reports figures (terlalu besar)
+reports/figures/*.png
+
+# Database SQLite (terlalu besar)
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log

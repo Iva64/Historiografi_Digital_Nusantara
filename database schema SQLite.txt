@@ -1,0 +1,436 @@
+<writeToFile>
+<path>03_Katalog_Digital/3.1_Database_Master/database_schema.sql</path>
+<content>-- ============================================================================
+-- HISTORIOGRAFI DIGITAL NUSANTARA
+-- Database Schema untuk Katalogisasi Dokumen Sejarah Aceh Abad Pertengahan
+-- ============================================================================
+-- Versi: 1.0
+-- Tanggal: 2026-07-05
+-- Deskripsi: Schema database untuk menyimpan metadata dokumen, entitas (tokoh, 
+--            tempat, peristiwa), dan relasi antar entitas hasil ekstraksi AI
+-- ============================================================================
+
+-- ============================================================================
+-- TABEL 1: DOKUMEN (MANUSCRIPTS)
+-- Menyimpan metadata lengkap setiap dokumen/naskah
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS dokumen (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    kode_arsip TEXT UNIQUE NOT NULL,           -- Kode referensi dari arsip (misal: KBG-Or-1234)
+    judul_naskah TEXT,                          -- Judul naskah (jika ada)
+    judul_modern TEXT,                          -- Judul yang diberikan oleh katalog modern
+    tipologi_naskah TEXT,                       -- Jenis: Hikayat, Surat, Salasilah, Kitab Hukum, dll
+    bahasa TEXT,                                -- Bahasa: Melayu Klasik, Aceh, Arab, dll
+    aksara TEXT,                                -- Aksara: Jawi, Arab, Latin, dll
+    tahun_hijriah TEXT,                         -- Tahun penulisan dalam Hijriah (bisa range: 850-860)
+    tahun_masehi TEXT,                          -- Tahun penulisan dalam Masehi (konversi)
+    periode_perkiraan TEXT,                     -- Abad/Priode: Abad ke-16, Awal Abad ke-17, dll
+    pengarang TEXT,                             -- Nama pengarang (jika diketahui)
+    lokasi_arsip TEXT,                          -- Nama institusi arsip (Leiden, London, dll)
+    kode_koleksi TEXT,                          -- Kode koleksi dalam arsip
+    kondisi_fisik TEXT,                         -- Deskripsi kondisi: Baik, Rusak, Fragmen, dll
+    jumlah_halaman INTEGER,                     -- Jumlah halaman/folio
+    deskripsi_fisik TEXT,                       -- Deskripsi material: kertas, tinta, ukuran, dll
+    provenance TEXT,                            -- Riwayat kepemilikan naskah
+    catatan_katalog TEXT,                       -- Catatan dari katalog arsip
+    file_path_scan TEXT,                        -- Path ke file scan (PDF/JPG)
+    file_path_transkripsi TEXT,                 -- Path ke file transkripsi (TXT/JSON)
+    status_proses TEXT DEFAULT 'belum_diproses', -- Status: belum_diproses, ocr_selesai, nlp_selesai, divalidasi
+    confidence_score REAL DEFAULT 0.0,          -- Skor kepercayaan hasil OCR (0-1)
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    tanggal_update DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+-- Index untuk pencarian cepat
+CREATE INDEX idx_dokumen_kode_arsip ON dokumen(kode_arsip);
+CREATE INDEX idx_dokumen_tipologi ON dokumen(tipologi_naskah);
+CREATE INDEX idx_dokumen_tahun ON dokumen(tahun_masehi);
+CREATE INDEX idx_dokumen_status ON dokumen(status_proses);
+-- ============================================================================
+-- TABEL 2: TOKOH (PEOPLE)
+-- Menyimpan data tokoh/sejarah yang disebut dalam dokumen
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS tokoh (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama_utama TEXT NOT NULL,                   -- Nama utama/standar (misal: Iskandar Muda)
+    nama_lengkap TEXT,                          -- Nama lengkap dengan gelar
+    nama_alternatif TEXT,                       -- Nama dalam ejaan lain (JSON array)
+    gelar TEXT,                                 -- Gelar: Sultan, Teuku, Tengku, Syah, dll
+    gelar_lengkap TEXT,                         -- Gelar lengkap dengan nama
+    tahun_lahir_hijriah TEXT,                   -- Tahun lahir (Hijriah)
+    tahun_lahir_masehi TEXT,                    -- Tahun lahir (Masehi)
+    tahun_wafat_hijriah TEXT,                   -- Tahun wafat (Hijriah)
+    tahun_wafat_masehi TEXT,                    -- Tahun wafat (Masehi)
+    periode_aktif TEXT,                         -- Periode aktif: 1607-1636
+    jenis_kelamin TEXT,                         -- Laki-laki, Perempuan, Tidak_Diketahui
+    etnis TEXT,                                 -- Etnis: Aceh, Melayu, Arab, Gujarat, dll
+    peran_utama TEXT,                           -- Peran: Sultan, Ulama, Pedagang, Diplomat, dll
+    peran_lain TEXT,                            -- Peran lain (JSON array)
+    biografi_singkat TEXT,                      -- Ringkasan biografi
+    catatan_histories TEXT,                     -- Catatan historis penting
+    sumber_biografi TEXT,                       -- Referensi untuk biografi
+    confidence_score REAL DEFAULT 0.0,          -- Skor kepercayaan identifikasi
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    tanggal_update DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_tokoh_nama ON tokoh(nama_utama);
+CREATE INDEX idx_tokoh_gelar ON tokoh(gelar);
+CREATE INDEX idx_tokoh_peran ON tokoh(peran_utama);
+CREATE INDEX idx_tokoh_periode ON tokoh(periode_aktif);
+-- ============================================================================
+-- TABEL 3: TEMPAT (LOCATIONS)
+-- Menyimpan data tempat/lokasi yang disebut dalam dokumen
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS tempat (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama_historis TEXT NOT NULL,                -- Nama dalam dokumen (misal: Acheh, Achin)
+    nama_modern TEXT,                           -- Nama modern (misal: Banda Aceh)
+    nama_alternatif TEXT,                       -- Nama lain (JSON array)
+    jenis_tempat TEXT,                          -- Jenis: Kerajaan, Pelabuhan, Kota, Masjid, dll
+    wilayah TEXT,                               -- Wilayah: Sumatera, Nusantara, Asia Tenggara, dll
+    negara_modern TEXT,                         -- Negara modern: Indonesia, Malaysia, dll
+    latitude REAL,                              -- Koordinat latitude (jika diketahui)
+    longitude REAL,                             -- Koordinat longitude (jika diketahui)
+    deskripsi TEXT,                             -- Deskripsi historis
+    signifikansi TEXT,                          -- Signifikansi dalam sejarah Aceh
+    catatan TEXT,                               -- Catatan tambahan
+    confidence_score REAL DEFAULT 0.0,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    tanggal_update DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_tempat_nama ON tempat(nama_historis);
+CREATE INDEX idx_tempat_jenis ON tempat(jenis_tempat);
+CREATE INDEX idx_tempat_wilayah ON tempat(wilayah);
+-- ============================================================================
+-- TABEL 4: PERISTIWA (EVENTS)
+-- Menyimpan data peristiwa/sejarah yang disebut dalam dokumen
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS peristiwa (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama_peristiwa TEXT NOT NULL,               -- Nama peristiwa (misal: Penaklukan Pasai)
+    jenis_peristiwa TEXT,                       -- Jenis: Perang, Perjanjian, Suksesi, Diplomasi, dll
+    tahun_hijriah TEXT,                         -- Tahun kejadian (Hijriah)
+    tahun_masehi TEXT,                          -- Tahun kejadian (Masehi)
+    tanggal_spesifik TEXT,                      -- Tanggal spesifik jika ada
+    lokasi_id INTEGER,                          -- Referensi ke tabel tempat
+    deskripsi TEXT,                             -- Deskripsi peristiwa
+    signifikansi TEXT,                          -- Signifikansi historis
+    sumber TEXT,                                -- Sumber informasi
+    confidence_score REAL DEFAULT 0.0,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    tanggal_update DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (lokasi_id) REFERENCES tempat(id)
+);
+CREATE INDEX idx_peristiwa_nama ON peristiwa(nama_peristiwa);
+CREATE INDEX idx_peristiwa_jenis ON peristiwa(jenis_peristiwa);
+CREATE INDEX idx_peristiwa_tahun ON peristiwa(tahun_masehi);
+-- ============================================================================
+-- TABEL 5: KONSEP/TOPIK (CONCEPTS)
+-- Menyimpan konsep, topik, atau tema yang dibahas dalam dokumen
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS konsep (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama_konsep TEXT NOT NULL,                  -- Nama konsep (misal: Islamisasi, Perdagangan Lada)
+    kategori TEXT,                              -- Kategori: Politik, Ekonomi, Agama, Budaya, dll
+    deskripsi TEXT,                             -- Deskripsi konsep
+    istilah_terkait TEXT,                       -- Istilah lain (JSON array)
+    confidence_score REAL DEFAULT 0.0,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    tanggal_update DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_konsep_nama ON konsep(nama_konsep);
+CREATE INDEX idx_konsep_kategori ON konsep(kategori);
+-- ============================================================================
+-- TABEL 6: RELASI DOKUMEN-TOKOH
+-- Menyimpan hubungan antara dokumen dengan tokoh yang disebut di dalamnya
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS relasi_dokumen_tokoh (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dokumen_id INTEGER NOT NULL,
+    tokoh_id INTEGER NOT NULL,
+    jenis_relasi TEXT,                          -- Jenis: Penulis, Subjek, Disebut, dll
+    konteks_sebutan TEXT,                       -- Konteks penyebutan dalam dokumen
+    halaman_sebutan TEXT,                       -- Halaman/folio penyebutan
+    kutipan_teks TEXT,                          -- Kutipan teks yang menyebut tokoh
+    confidence_score REAL DEFAULT 0.0,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (dokumen_id) REFERENCES dokumen(id) ON DELETE CASCADE,
+    FOREIGN KEY (tokoh_id) REFERENCES tokoh(id) ON DELETE CASCADE,
+    UNIQUE(dokumen_id, tokoh_id, jenis_relasi, halaman_sebutan)
+);
+CREATE INDEX idx_rel_dt_dokumen ON relasi_dokumen_tokoh(dokumen_id);
+CREATE INDEX idx_rel_dt_tokoh ON relasi_dokumen_tokoh(tokoh_id);
+-- ============================================================================
+-- TABEL 7: RELASI DOKUMEN-TEMPAT
+-- Menyimpan hubungan antara dokumen dengan tempat yang disebut di dalamnya
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS relasi_dokumen_tempat (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dokumen_id INTEGER NOT NULL,
+    tempat_id INTEGER NOT NULL,
+    jenis_relasi TEXT,                          -- Jenis: Lokasi_Penulisan, Disebut, Latar_Belakang, dll
+    konteks_sebutan TEXT,
+    halaman_sebutan TEXT,
+    kutipan_teks TEXT,
+    confidence_score REAL DEFAULT 0.0,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (dokumen_id) REFERENCES dokumen(id) ON DELETE CASCADE,
+    FOREIGN KEY (tempat_id) REFERENCES tempat(id) ON DELETE CASCADE,
+    UNIQUE(dokumen_id, tempat_id, jenis_relasi, halaman_sebutan)
+);
+CREATE INDEX idx_rel_dp_dokumen ON relasi_dokumen_tempat(dokumen_id);
+CREATE INDEX idx_rel_dp_tempat ON relasi_dokumen_tempat(tempat_id);
+-- ============================================================================
+-- TABEL 8: RELASI DOKUMEN-PERISTIWA
+-- Menyimpan hubungan antara dokumen dengan peristiwa yang disebut di dalamnya
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS relasi_dokumen_peristiwa (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dokumen_id INTEGER NOT NULL,
+    peristiwa_id INTEGER NOT NULL,
+    jenis_relasi TEXT,                          -- Jenis: Sumber_Prima, Disebut, Latar_Belakang, dll
+    konteks_sebutan TEXT,
+    halaman_sebutan TEXT,
+    kutipan_teks TEXT,
+    confidence_score REAL DEFAULT 0.0,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (dokumen_id) REFERENCES dokumen(id) ON DELETE CASCADE,
+    FOREIGN KEY (peristiwa_id) REFERENCES peristiwa(id) ON DELETE CASCADE,
+    UNIQUE(dokumen_id, peristiwa_id, jenis_relasi, halaman_sebutan)
+);
+CREATE INDEX idx_rel_dpe_dokumen ON relasi_dokumen_peristiwa(dokumen_id);
+CREATE INDEX idx_rel_dpe_peristiwa ON relasi_dokumen_peristiwa(peristiwa_id);
+-- ============================================================================
+-- TABEL 9: RELASI DOKUMEN-KONSEP
+-- Menyimpan hubungan antara dokumen dengan konsep/topik yang dibahas
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS relasi_dokumen_konsep (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dokumen_id INTEGER NOT NULL,
+    konsep_id INTEGER NOT NULL,
+    relevansi REAL DEFAULT 0.0,                 -- Skor relevansi (0-1)
+    konteks_pembahasan TEXT,
+    halaman_pembahasan TEXT,
+    confidence_score REAL DEFAULT 0.0,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (dokumen_id) REFERENCES dokumen(id) ON DELETE CASCADE,
+    FOREIGN KEY (konsep_id) REFERENCES konsep(id) ON DELETE CASCADE,
+    UNIQUE(dokumen_id, konsep_id)
+);
+CREATE INDEX idx_rel_dk_dokumen ON relasi_dokumen_konsep(dokumen_id);
+CREATE INDEX idx_rel_dk_konsep ON relasi_dokumen_konsep(konsep_id);
+-- ============================================================================
+-- TABEL 10: RELASI TOKOH-TOKOH (JARINGAN SOSIAL)
+-- Menyimpan hubungan antar tokoh (silsilah, politik, dll)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS relasi_tokoh_tokoh (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tokoh_1_id INTEGER NOT NULL,
+    tokoh_2_id INTEGER NOT NULL,
+    jenis_relasi TEXT NOT NULL,                 -- Jenis: Ayah, Ibu, Anak, Istri, Suami, Sekutu, Musuh, dll
+    kategori_relasi TEXT,                       -- Kategori: Keluarga, Politik, Ekonomi, Agama, dll
+    tahun_mulai TEXT,                           -- Tahun mulai hubungan (jika relevan)
+    tahun_selesai TEXT,                         -- Tahun selesai hubungan (jika relevan)
+    deskripsi TEXT,                             -- Deskripsi hubungan
+    sumber_dokumen TEXT,                        -- Dokumen sumber informasi
+    confidence_score REAL DEFAULT 0.0,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (tokoh_1_id) REFERENCES tokoh(id) ON DELETE CASCADE,
+    FOREIGN KEY (tokoh_2_id) REFERENCES tokoh(id) ON DELETE CASCADE,
+    UNIQUE(tokoh_1_id, tokoh_2_id, jenis_relasi)
+);
+CREATE INDEX idx_rel_tt_tokoh1 ON relasi_tokoh_tokoh(tokoh_1_id);
+CREATE INDEX idx_rel_tt_tokoh2 ON relasi_tokoh_tokoh(tokoh_2_id);
+CREATE INDEX idx_rel_tt_jenis ON relasi_tokoh_tokoh(jenis_relasi);
+CREATE INDEX idx_rel_tt_kategori ON relasi_tokoh_tokoh(kategori_relasi);
+-- ============================================================================
+-- TABEL 11: LOG PROSES AI
+-- Menyimpan log proses OCR dan NLP untuk audit trail
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS log_proses_ai (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dokumen_id INTEGER NOT NULL,
+    jenis_proses TEXT NOT NULL,                 -- Jenis: OCR, Transliterasi, NER, dll
+    tool_used TEXT,                             -- Tool/model yang digunakan
+    parameter TEXT,                             -- Parameter yang digunakan (JSON)
+    hasil_proses TEXT,                          -- Ringkasan hasil (JSON)
+    error_message TEXT,                         -- Pesan error (jika ada)
+    waktu_mulai DATETIME,
+    waktu_selesai DATETIME,
+    durasi_detik REAL,
+    confidence_score REAL,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (dokumen_id) REFERENCES dokumen(id) ON DELETE CASCADE
+);
+CREATE INDEX idx_log_dokumen ON log_proses_ai(dokumen_id);
+CREATE INDEX idx_log_jenis ON log_proses_ai(jenis_proses);
+CREATE INDEX idx_log_waktu ON log_proses_ai(tanggal_input);
+-- ============================================================================
+-- TABEL 12: TAGS & KEYWORDS
+-- Menyimpan tags/keywords untuk klasifikasi fleksibel
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS tags (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama_tag TEXT UNIQUE NOT NULL,
+    kategori_tag TEXT,                          -- Kategori: Subjek, Genre, Periode, dll
+    deskripsi TEXT,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS relasi_dokumen_tags (
+    dokumen_id INTEGER NOT NULL,
+    tag_id INTEGER NOT NULL,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (dokumen_id, tag_id),
+    FOREIGN KEY (dokumen_id) REFERENCES dokumen(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+);
+CREATE INDEX idx_rel_dt_tag ON relasi_dokumen_tags(tag_id);
+-- ============================================================================
+-- TABEL 13: REFERENSI SILANG ANTAR DOKUMEN
+-- Menyimpan hubungan referensi antar dokumen (intertekstualitas)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS referensi_silang (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dokumen_sumber_id INTEGER NOT NULL,         -- Dokumen yang mereferensi
+    dokumen_rujukan_id INTEGER NOT NULL,        -- Dokumen yang dirujuk
+    jenis_referensi TEXT,                       -- Jenis: Kutipan, Parafrase, Kritik, Lanjutan, dll
+    konteks_referensi TEXT,                     -- Konteks referensi
+    halaman_referensi TEXT,                     -- Halaman referensi
+    confidence_score REAL DEFAULT 0.0,
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (dokumen_sumber_id) REFERENCES dokumen(id) ON DELETE CASCADE,
+    FOREIGN KEY (dokumen_rujukan_id) REFERENCES dokumen(id) ON DELETE CASCADE,
+    UNIQUE(dokumen_sumber_id, dokumen_rujukan_id, jenis_referensi)
+);
+CREATE INDEX idx_ref_sumber ON referensi_silang(dokumen_sumber_id);
+CREATE INDEX idx_ref_rujukan ON referensi_silang(dokumen_rujukan_id);
+-- ============================================================================
+-- TABEL 14: KATA KUNCI & FREKUENSI
+-- Menyimpan kata kunci dan frekuensi kemunculan untuk analisis teks
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS kata_kunci (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dokumen_id INTEGER NOT NULL,
+    kata TEXT NOT NULL,
+    frekuensi INTEGER DEFAULT 1,
+    konteks TEXT,                               -- Konteks kemunculan (JSON array)
+    tanggal_input DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (dokumen_id) REFERENCES dokumen(id) ON DELETE CASCADE,
+    UNIQUE(dokumen_id, kata)
+);
+CREATE INDEX idx_kk_dokumen ON kata_kunci(dokumen_id);
+CREATE INDEX idx_kk_kata ON kata_kunci(kata);
+-- ============================================================================
+-- TABEL 15: VALIDASI MANUAL
+-- Menyimpan catatan validasi manual oleh peneliti
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS validasi_manual (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    entitas_tipe TEXT NOT NULL,                 -- Tipe: tokoh, tempat, peristiwa, dll
+    entitas_id INTEGER NOT NULL,                -- ID entitas yang divalidasi
+    validator TEXT,                             -- Nama validator
+    status_validasi TEXT,                       -- Status: Valid, Invalid, Perlu_Revisi
+    catatan_validasi TEXT,                      -- Catatan validator
+    tanggal_validasi DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (entitas_id) REFERENCES tokoh(id) ON DELETE CASCADE
+);
+CREATE INDEX idx_val_entitas ON validasi_manual(entitas_tipe, entitas_id);
+CREATE INDEX idx_val_status ON validasi_manual(status_validasi);
+-- ============================================================================
+-- VIEW: Ringkasan Statistik Dokumen
+-- ============================================================================
+CREATE VIEW IF NOT EXISTS view_statistik_dokumen AS
+SELECT 
+    tipologi_naskah,
+    COUNT(*) as jumlah_dokumen,
+    AVG(confidence_score) as rata_rata_confidence,
+    MIN(tahun_masehi) as tahun_terlama,
+    MAX(tahun_masehi) as tahun_terbaru
+FROM dokumen
+WHERE status_proses = 'divalidasi'
+GROUP BY tipologi_naskah;
+-- ============================================================================
+-- VIEW: Jaringan Tokoh (untuk visualisasi)
+-- ============================================================================
+CREATE VIEW IF NOT EXISTS view_jaringan_tokoh AS
+SELECT 
+    t1.nama_utama as tokoh_1,
+    t2.nama_utama as tokoh_2,
+    rtt.jenis_relasi,
+    rtt.kategori_relasi,
+    rtt.confidence_score
+FROM relasi_tokoh_tokoh rtt
+JOIN tokoh t1 ON rtt.tokoh_1_id = t1.id
+JOIN tokoh t2 ON rtt.tokoh_2_id = t2.id;
+-- ============================================================================
+-- VIEW: Timeline Peristiwa
+-- ============================================================================
+CREATE VIEW IF NOT EXISTS view_timeline_peristiwa AS
+SELECT 
+    p.nama_peristiwa,
+    p.jenis_peristiwa,
+    p.tahun_masehi,
+    p.tahun_hijriah,
+    tp.nama_modern as lokasi,
+    p.deskripsi,
+    p.confidence_score
+FROM peristiwa p
+LEFT JOIN tempat tp ON p.lokasi_id = tp.id
+WHERE p.tahun_masehi IS NOT NULL
+ORDER BY p.tahun_masehi;
+-- ============================================================================
+-- TRIGGER: Auto-update timestamp
+-- ============================================================================
+CREATE TRIGGER IF NOT EXISTS trg_dokumen_update 
+AFTER UPDATE ON dokumen
+BEGIN
+    UPDATE dokumen SET tanggal_update = CURRENT_TIMESTAMP WHERE id = NEW.id;
+END;
+CREATE TRIGGER IF NOT EXISTS trg_tokoh_update 
+AFTER UPDATE ON tokoh
+BEGIN
+    UPDATE tokoh SET tanggal_update = CURRENT_TIMESTAMP WHERE id = NEW.id;
+END;
+CREATE TRIGGER IF NOT EXISTS trg_tempat_update 
+AFTER UPDATE ON tempat
+BEGIN
+    UPDATE tempat SET tanggal_update = CURRENT_TIMESTAMP WHERE id = NEW.id;
+END;
+CREATE TRIGGER IF NOT EXISTS trg_peristiwa_update 
+AFTER UPDATE ON peristiwa
+BEGIN
+    UPDATE peristiwa SET tanggal_update = CURRENT_TIMESTAMP WHERE id = NEW.id;
+END;
+-- ============================================================================
+-- DATA AWAL: Tags Standar
+-- ============================================================================
+INSERT OR IGNORE INTO tags (nama_tag, kategori_tag, deskripsi) VALUES
+('Hikayat', 'Genre', 'Naskah sastra sejarah'),
+('Salasilah', 'Genre', 'Silsilah raja/dinasti'),
+('Surat_Diplomatik', 'Genre', 'Surat-menyurat resmi kerajaan'),
+('Kitab_Agama', 'Genre', 'Kitab fiqih, tasawuf, tafsir'),
+('Undang_Undang', 'Genre', 'Kitab hukum kerajaan'),
+('Abad_16', 'Periode', 'Dokumen dari abad ke-16'),
+('Abad_17', 'Periode', 'Dokumen dari abad ke-17'),
+('Abad_18', 'Periode', 'Dokumen dari abad ke-18'),
+('Abad_19', 'Periode', 'Dokumen dari abad ke-19'),
+('Politik', 'Subjek', 'Tentang politik dan pemerintahan'),
+('Ekonomi', 'Subjek', 'Tentang perdagangan dan ekonomi'),
+('Agama', 'Subjek', 'Tentang agama dan keagamaan'),
+('Militer', 'Subjek', 'Tentang perang dan militer'),
+('Diplomasi', 'Subjek', 'Tentang hubungan internasional');
+-- ============================================================================
+-- CATATAN IMPLEMENTASI
+-- ============================================================================
+-- 1. Gunakan confidence_score untuk memfilter hasil ekstraksi AI
+--    - Score > 0.8: Hasil sangat baik, bisa langsung digunakan
+--    - Score 0.5-0.8: Perlu validasi manual
+--    - Score < 0.5: Kemungkinan besar salah, perlu review mendalam
+-- 2. Field JSON array (nama_alternatif, peran_lain, dll) disimpan sebagai 
+--    string JSON. Parse dengan fungsi JSON di Python/SQLite
+-- 3. Untuk query jaringan (network analysis), gunakan view_jaringan_tokoh
+-- 4. Untuk visualisasi timeline, gunakan view_timeline_peristiwa
+-- 5. Selalu backup database sebelum melakukan operasi massal
+-- ============================================================================
+-- Selesai. Database siap digunakan.
+</content>
+</writeToFile>
