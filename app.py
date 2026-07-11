@@ -17,7 +17,7 @@ import os
 # --- KONFIGURASI DATABASE BESAR ---
 # GANTI 'FILE_ID_ANDA_DI_SINI' dengan ID yang Anda copy dari Google Drive tadi
 GDRIVE_FILE_ID = '1aBcDeFgHiJkLmNoPqRsTuVwXyZ123456'
-DB_URL = f"https://drive.google.com/uc?id={GDRIVE_FILE_ID}"
+DB_URL = f"https://drive.google.com/uc?export=download&id={GDRIVE_FILE_ID}"
 REAL_DB_PATH = "sample_data/nusantara_search.db"
 
 @st.cache_resource(show_spinner="Mengunduh database utama dari Google Drive... (Hanya sekali)")
