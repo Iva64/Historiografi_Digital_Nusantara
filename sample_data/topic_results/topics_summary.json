@@ -1,0 +1,130 @@
+[
+  {
+    "topic_id": 0,
+    "name": "Topik 1: bijdragen, memahami, hindiabelanda, panduan",
+    "top_words": [
+      "bijdragen",
+      "memahami",
+      "hindiabelanda",
+      "panduan",
+      "taal",
+      "nederlandsch",
+      "overzicht",
+      "commissie",
+      "rapport",
+      "perusahaan"
+    ]
+  },
+  {
+    "topic_id": 1,
+    "name": "Topik 2: lebih, tahun, besar, menjadi",
+    "top_words": [
+      "lebih",
+      "tahun",
+      "besar",
+      "menjadi",
+      "pantai",
+      "belanda",
+      "tersebut",
+      "timur",
+      "beberapa",
+      "barat"
+    ]
+  },
+  {
+    "topic_id": 2,
+    "name": "Topik 3: atjeh, aantal, tegen, heer",
+    "top_words": [
+      "atjeh",
+      "aantal",
+      "tegen",
+      "heer",
+      "jaar",
+      "oorlog",
+      "nederland",
+      "jaren",
+      "leger",
+      "moet"
+    ]
+  },
+  {
+    "topic_id": 3,
+    "name": "Topik 4: jang, itoe, also, they",
+    "top_words": [
+      "jang",
+      "itoe",
+      "also",
+      "they",
+      "bijl",
+      "their",
+      "nicht",
+      "oder",
+      "would",
+      "there"
+    ]
+  },
+  {
+    "topic_id": 4,
+    "name": "Topik 5: lang, kracht, gemidd, aantal",
+    "top_words": [
+      "lang",
+      "kracht",
+      "gemidd",
+      "aantal",
+      "malen",
+      "tekoe",
+      "jang",
+      "sagi",
+      "itoe",
+      "atjeh"
+    ]
+  },
+  {
+    "topic_id": 5,
+    "name": "Topik 6: haar, groote, echter, doch",
+    "top_words": [
+      "haar",
+      "groote",
+      "echter",
+      "doch",
+      "plaats",
+      "java",
+      "veel",
+      "reeds",
+      "geheel",
+      "tusschen"
+    ]
+  },
+  {
+    "topic_id": 6,
+    "name": "Topik 7: vijand, troepen, zijne, hadden",
+    "top_words": [
+      "vijand",
+      "troepen",
+      "zijne",
+      "hadden",
+      "tegen",
+      "atjeh",
+      "doen",
+      "eenige",
+      "twee",
+      "reeds"
+    ]
+  },
+  {
+    "topic_id": 7,
+    "name": "Topik 8: commissarissen, directeur, akte, amsterdam",
+    "top_words": [
+      "commissarissen",
+      "directeur",
+      "akte",
+      "amsterdam",
+      "directie",
+      "raad",
+      "alle",
+      "stemmen",
+      "vennootschappen",
+      "besluit"
+    ]
+  }
+]
