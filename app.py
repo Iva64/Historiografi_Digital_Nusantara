@@ -1,4 +1,4 @@
-1"""
+"""
 Dashboard Web Historiografi Digital Nusantara - Versi Final (Cloud-Ready)
 """
 
