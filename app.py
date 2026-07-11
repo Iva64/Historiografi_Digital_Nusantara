@@ -10,7 +10,29 @@ import plotly.express as px
 import json
 from pathlib import Path
 import streamlit.components.v1 as components
+#---------------------
+import gdown
+import os
 
+# --- KONFIGURASI DATABASE BESAR ---
+# GANTI 'FILE_ID_ANDA_DI_SINI' dengan ID yang Anda copy dari Google Drive tadi
+GDRIVE_FILE_ID = 'FILE_ID_ANDA_DI_SINI' 
+DB_URL = f"https://drive.google.com/uc?id={GDRIVE_FILE_ID}"
+REAL_DB_PATH = "sample_data/nusantara_search.db"
+
+@st.cache_resource(show_spinner="Mengunduh database utama dari Google Drive... (Hanya sekali)")
+def ensure_real_db():
+    """Mengunduh database 1.4GB dari Google Drive jika belum ada."""
+    if not os.path.exists(REAL_DB_PATH):
+        st.info(" Database utama belum ada. Mengunduh dari Google Drive...")
+        gdown.download(DB_URL, REAL_DB_PATH, quiet=False)
+        st.success("✅ Database berhasil diunduh!")
+    return REAL_DB_PATH
+
+# Panggil fungsi ini di awal agar download terjadi
+ensure_real_db()
+# ------------------------------------
+# -------------------
 # Konfigurasi Halaman
 st.set_page_config(
     page_title="Historiografi Digital Nusantara",
