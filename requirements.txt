@@ -1,6 +1,7 @@
-streamlit
-plotly
-pandas
-pyvis
-scikit-learn
-nltk
+streamlit==1.38.0
+plotly==5.24.0
+pandas==2.2.2
+numpy==1.26.4
+pyvis==0.3.2
+scikit-learn==1.5.1
+nltk==3.9.1
