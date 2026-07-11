@@ -128,12 +128,10 @@ elif page == " Pencarian":
             if query:
                 try:
                     sql = '''
-                        SELECT filename, snippet(naskah_fts, 1, '<b>', '</b>', '...', 64) as snippet
+                        SELECT filename, content as snippet
                         FROM naskah_fts
                         WHERE naskah_fts MATCH ?
-                        ORDER BY rank
                         LIMIT ?
-                    '''
                     
                     df = pd.read_sql_query(sql, conn, params=(query, 10))
                     
