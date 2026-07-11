@@ -25,17 +25,11 @@ def get_data_path():
     data_path = Path("data")
     sample_path = Path("sample_data")
     
-    st.write(f"**Debug:** data_path exists: {data_path.exists()}")
-    st.write(f"**Debug:** sample_path exists: {sample_path.exists()}")
-    
     if data_path.exists() and any(data_path.iterdir()):
-        st.write("**Debug:** Menggunakan data/")
         return data_path
     elif sample_path.exists() and any(sample_path.iterdir()):
-        st.write("**Debug:** Menggunakan sample_data/")
         return sample_path
     else:
-        st.write("**Debug:** Tidak ada data!")
         return None
 
 @st.cache_resource
@@ -83,12 +77,12 @@ def load_topic_data():
 
 # --- SIDEBAR ---
 
-st.sidebar.title(" Historiografi Digital")
+st.sidebar.title("📜 Historiografi Digital")
 
 # Tampilkan mode yang sedang aktif
 data_path = get_data_path()
 if data_path:
-    mode_label = "️ Mode Lokal" if str(data_path) == "data" else "☁️ Mode Cloud (Demo)"
+    mode_label = "🖥️ Mode Lokal" if str(data_path) == "data" else "☁️ Mode Cloud (Demo)"
     st.sidebar.info(f"**{mode_label}**\n\nData: `{data_path}`")
 else:
     st.sidebar.error("⚠️ Data tidak ditemukan!")
@@ -100,7 +94,7 @@ page = st.sidebar.radio(
 
 # --- HALAMAN 1: BERANDA ---
 if page == "🏠 Beranda":
-    st.title(" Historiografi Digital Nusantara")
+    st.title("🏠 Historiografi Digital Nusantara")
     st.markdown("Dashboard analisis digital untuk naskah sejarah Nusantara.")
     
     ner_data = load_ner_data()
@@ -117,12 +111,12 @@ if page == "🏠 Beranda":
         st.warning("⚠️ Data NER tidak ditemukan.")
 
 # --- HALAMAN 2: PENCARIAN ---
-elif page == " Pencarian":
-    st.title(" Pencarian Naskah")
+elif page == "🔍 Pencarian":
+    st.title("🔍 Pencarian Naskah")
     
     conn = get_db_connection()
     if conn:
-        query = st.text_input("Kata kunci:", placeholder="Contoh: Sultan, Batavia, 1873")
+        query = st.text_input("Kata kunci:", placeholder="Contoh: Sultan, Batavia, 1628")
         
         if st.button("Cari"):
             if query:
@@ -132,6 +126,7 @@ elif page == " Pencarian":
                         FROM naskah_fts
                         WHERE naskah_fts MATCH ?
                         LIMIT ?
+                    '''
                     
                     df = pd.read_sql_query(sql, conn, params=(query, 10))
                     
@@ -140,7 +135,7 @@ elif page == " Pencarian":
                     else:
                         st.success(f"✅ Ditemukan **{len(df)}** hasil")
                         for _, row in df.iterrows():
-                            st.markdown(f"** {row['filename']}**")
+                            st.markdown(f"**📄 {row['filename']}**")
                             st.markdown(row['snippet'], unsafe_allow_html=True)
                             st.divider()
                 except Exception as e:
@@ -195,8 +190,8 @@ elif page == "🏷️ Statistik NER":
         st.warning("⚠️ Data NER tidak ditemukan.")
 
 # --- HALAMAN 4: TOPIK ---
-elif page == " Topik":
-    st.title(" Topik Naskah")
+elif page == "📚 Topik":
+    st.title("📚 Topik Naskah")
     
     topic_data = load_topic_data()
     if topic_data:
