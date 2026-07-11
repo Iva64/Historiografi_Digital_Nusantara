@@ -11147,7 +11147,7 @@
         2
       ],
       [
-        "Gantoeng bin Imoen",
+        "Doewahid bin Doeahip",
         2
       ],
       [
@@ -11159,15 +11159,7 @@
         2
       ],
       [
-        "Soleman bin Hadji",
-        2
-      ],
-      [
         "Idris bin Hadji",
-        2
-      ],
-      [
-        "Hasan bin Tagap",
         2
       ],
       [
@@ -11175,11 +11167,19 @@
         2
       ],
       [
-        "Doewahid bin Doeahip",
+        "Hasan bin Tagap",
+        2
+      ],
+      [
+        "Soleman bin Hadji",
         2
       ],
       [
         "Tahil bin Dede",
+        2
+      ],
+      [
+        "Gantoeng bin Imoen",
         2
       ],
       [
@@ -11191,7 +11191,7 @@
         2
       ],
       [
-        "Prabu",
+        "Kini putri Raja",
         1
       ],
       [
@@ -11199,15 +11199,15 @@
         1
       ],
       [
-        "Kini putri Raja",
-        1
-      ],
-      [
-        "Sjamsuddin bin Geumpa",
+        "Prabu",
         1
       ],
       [
         "Datuk",
+        1
+      ],
+      [
+        "Sjamsuddin bin Geumpa",
         1
       ],
       [
@@ -11219,10 +11219,6 @@
         1
       ],
       [
-        "Sjech ibn Maulana",
-        1
-      ],
-      [
         "Oesman ibn Abdoellah",
         1
       ],
@@ -11231,7 +11227,11 @@
         1
       ],
       [
-        "Menjadi putra Soeltan",
+        "Sjech ibn Maulana",
+        1
+      ],
+      [
+        "Ketika putri Gunung",
         1
       ]
     ],
@@ -11261,11 +11261,11 @@
         68
       ],
       [
-        "Palembang",
+        "Celebes",
         63
       ],
       [
-        "Celebes",
+        "Palembang",
         63
       ],
       [
@@ -11301,11 +11301,11 @@
         26
       ],
       [
-        "Padang",
+        "Belanda",
         23
       ],
       [
-        "Belanda",
+        "Padang",
         23
       ],
       [
@@ -11321,14 +11321,6 @@
         20
       ],
       [
-        "Kalimantan",
-        19
-      ],
-      [
-        "Hindia Belanda",
-        19
-      ],
-      [
         "Surabaya",
         19
       ],
@@ -11337,19 +11329,27 @@
         19
       ],
       [
-        "Sumbawa",
-        18
+        "Kalimantan",
+        19
+      ],
+      [
+        "Hindia Belanda",
+        19
       ],
       [
         "Nusantara",
         18
       ],
       [
-        "India",
+        "Sulawesi",
         18
       ],
       [
-        "Sulawesi",
+        "Sumbawa",
+        18
+      ],
+      [
+        "India",
         18
       ],
       [
@@ -11365,15 +11365,15 @@
         17
       ],
       [
+        "Utara",
+        16
+      ],
+      [
         "Barat",
         16
       ],
       [
         "Inggris",
-        16
-      ],
-      [
-        "Utara",
         16
       ],
       [
@@ -11385,11 +11385,11 @@
         15
       ],
       [
-        "Solo",
+        "Jambi",
         14
       ],
       [
-        "Jambi",
+        "Solo",
         14
       ],
       [
@@ -11405,19 +11405,11 @@
         14
       ],
       [
-        "Pantai Barat",
-        13
-      ],
-      [
         "Pemerintah",
         13
       ],
       [
-        "Jawa Barat",
-        13
-      ],
-      [
-        "Semarang",
+        "Pantai Barat",
         13
       ],
       [
@@ -11425,7 +11417,15 @@
         13
       ],
       [
+        "Jawa Barat",
+        13
+      ],
+      [
         "Selatan",
+        13
+      ],
+      [
+        "Semarang",
         13
       ],
       [
@@ -11455,11 +11455,11 @@
         14
       ],
       [
-        "Masjid",
+        "Istana",
         10
       ],
       [
-        "Istana",
+        "Masjid",
         10
       ],
       [
@@ -11515,15 +11515,19 @@
         3
       ],
       [
-        "Scottish Greographical",
-        3
-      ],
-      [
         "Boyal Asiatic",
         3
       ],
       [
+        "Scottish Greographical",
+        3
+      ],
+      [
         "Batavian",
+        3
+      ],
+      [
+        "Holland",
         3
       ],
       [
@@ -11532,10 +11536,6 @@
       ],
       [
         "Tokyo Geographical",
-        3
-      ],
-      [
-        "Holland",
         3
       ],
       [
@@ -11551,10 +11551,6 @@
         3
       ],
       [
-        "Scottish Geographical",
-        2
-      ],
-      [
         "Boyal",
         2
       ],
@@ -11563,7 +11559,19 @@
         2
       ],
       [
-        "Glasgow Philosophical",
+        "Scottish Geographical",
+        2
+      ],
+      [
+        "Commercial Geographic",
+        2
+      ],
+      [
+        "Indian Geographical",
+        2
+      ],
+      [
+        "Archaeological",
         2
       ],
       [
@@ -11571,23 +11579,19 @@
         2
       ],
       [
-        "Scientific",
+        "Glasgow Philosophical",
         2
       ],
       [
-        "Royal Belgian Geographical",
+        "Bomeo",
         2
       ],
       [
-        "Asian",
+        "English",
         2
       ],
       [
-        "Provincial Utrecht",
-        2
-      ],
-      [
-        "Royal Natural History",
+        "London",
         2
       ],
       [
@@ -11599,27 +11603,11 @@
         2
       ],
       [
-        "Norman Geographic",
-        2
-      ],
-      [
-        "English",
-        2
-      ],
-      [
-        "Bomeo",
-        2
-      ],
-      [
         "Mexican",
         2
       ],
       [
-        "Indian Geographical",
-        2
-      ],
-      [
-        "London",
+        "Asian",
         2
       ],
       [
@@ -11627,7 +11615,7 @@
         2
       ],
       [
-        "Geographic",
+        "Norman Geographic",
         2
       ],
       [
@@ -11635,7 +11623,19 @@
         2
       ],
       [
-        "Commercial Geographic",
+        "Provincial Utrecht",
+        2
+      ],
+      [
+        "Royal Natural History",
+        2
+      ],
+      [
+        "Royal Belgian Geographical",
+        2
+      ],
+      [
+        "Scientific",
         2
       ]
     ],
@@ -11673,11 +11673,11 @@
         27
       ],
       [
-        "1904",
+        "1883",
         27
       ],
       [
-        "1883",
+        "1904",
         27
       ],
       [
@@ -11705,11 +11705,11 @@
         24
       ],
       [
-        "1600",
+        "pada",
         23
       ],
       [
-        "pada",
+        "1600",
         23
       ],
       [
@@ -11721,11 +11721,11 @@
         23
       ],
       [
-        "1898",
+        "1897",
         23
       ],
       [
-        "1897",
+        "1898",
         23
       ],
       [
@@ -11733,11 +11733,11 @@
         23
       ],
       [
-        "1200",
+        "1880",
         22
       ],
       [
-        "1880",
+        "1200",
         22
       ],
       [
@@ -11745,7 +11745,7 @@
         22
       ],
       [
-        "1901",
+        "1908",
         22
       ],
       [
@@ -11753,7 +11753,7 @@
         22
       ],
       [
-        "1908",
+        "1901",
         22
       ],
       [
@@ -11785,20 +11785,12 @@
         20
       ],
       [
-        "1910",
-        20
-      ],
-      [
         "1916",
         20
       ],
       [
-        "1884",
-        19
-      ],
-      [
-        "1800",
-        19
+        "1910",
+        20
       ],
       [
         "1850",
@@ -11809,7 +11801,11 @@
         19
       ],
       [
-        "1900",
+        "1884",
+        19
+      ],
+      [
+        "1800",
         19
       ],
       [
@@ -11817,11 +11813,15 @@
         19
       ],
       [
+        "1900",
+        19
+      ],
+      [
         "1892",
         19
       ],
       [
-        "1824",
+        "1855",
         18
       ],
       [
@@ -11829,7 +11829,7 @@
         18
       ],
       [
-        "1855",
+        "1824",
         18
       ],
       [
