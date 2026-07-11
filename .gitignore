@@ -68,3 +68,8 @@ tokenKU
 # Kecualikan folder sampel dari ignore
 !sample_data/
 !sample_reports/
+
+# Izinkan file di sample_data untuk cloud demo
+!sample_data/
+!sample_reports/
+
