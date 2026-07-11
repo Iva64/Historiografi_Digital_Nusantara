@@ -25,11 +25,17 @@ def get_data_path():
     data_path = Path("data")
     sample_path = Path("sample_data")
     
+    st.write(f"**Debug:** data_path exists: {data_path.exists()}")
+    st.write(f"**Debug:** sample_path exists: {sample_path.exists()}")
+    
     if data_path.exists() and any(data_path.iterdir()):
+        st.write("**Debug:** Menggunakan data/")
         return data_path
     elif sample_path.exists() and any(sample_path.iterdir()):
+        st.write("**Debug:** Menggunakan sample_data/")
         return sample_path
     else:
+        st.write("**Debug:** Tidak ada data!")
         return None
 
 @st.cache_resource
