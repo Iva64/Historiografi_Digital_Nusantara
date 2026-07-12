@@ -64,7 +64,20 @@ if page == "🏠 Beranda":
     if ner_data:
         stats = ner_data.get('statistics', {})
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Naskah", stats.get('total_files_processed', 0))
+     # Coba hitung dari database jika ada
+        naskah_count = stats.get('total_files_processed', 0)
+        if naskah_count == 0:
+            # Fallback: hitung langsung dari database
+            conn = get_db_connection()
+            if conn:
+                try:
+                    c = conn.cursor()
+                    c.execute('SELECT COUNT(DISTINCT filename) FROM naskah_fts')
+                    naskah_count = c.fetchone()[0]
+                except:
+                    pass
+        col1.metric("Naskah", naskah_count)
+
         col2.metric("Tokoh Unik", stats.get('unique_persons', 0))
         col3.metric("Tempat Unik", stats.get('unique_locations', 0))
         col4.metric("Tanggal Unik", stats.get('unique_dates', 0))
